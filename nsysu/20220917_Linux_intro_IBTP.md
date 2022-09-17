@@ -5,10 +5,16 @@
   - [content](#content)
   - [`vim`](#vim)
   - [`rm, mv, cp`](#rm-mv-cp)
-- [Other commands](#other-commands)
+- [Remote Server](#remote-server)
+  - [Connect](#connect)
+  - [Compress](#compress)
   - [Resources (CPU, GPU, Network, etc.)](#resources-cpu-gpu-network-etc)
+- [Other commands](#other-commands)
   - [Executeable](#executeable)
   - [misc](#misc)
+- [Advanced topic](#advanced-topic)
+  - [grep, sed](#grep-sed)
+  - [Pipeline](#pipeline)
 
 ## Linux
 
@@ -25,9 +31,14 @@
 ```bash
 cd FOLDER_NAME
 cd ..
+```
 
-
+```bash
 ls
+ls /PATH/THAT       # list all files inside "/PATH/THAT" folder
+ls *.py             # list all .py files in this folder
+ls app*             # list all files its name started with "app"
+
 ls -l       # long format
 ls -h       # human-readable format of size (2.1M, 8.5G)
 ls -t       # sort with last-updated time
@@ -147,7 +158,41 @@ cp DIRECTORY ..                 # wrong
 cp -r DIRECTORY ..              copy the whole folder to parent directory
 ```
 
-## Other commands
+## Remote Server
+
+### Connect
+
+```bash
+ssh USERNAME@SERVER.NAME
+# Remeber connect to "CORRECT" VPN, can use ping to test
+ping 192.168.1.6
+ssh dragonchen@192.168.1.6
+# or
+ssh smalldragon@dragonchen.tw
+# or if the username is the same between current PC and remote PC
+ssh dragonchen.tw
+
+# copy to / download from remote
+# Copy to
+scp ./app.zip dragonchen@192.168.1.6:/home/dragonchen/test
+scp ~/Downloads/hello.go smalldragon@dragonchen.tw
+
+# Download from
+scp dragonchen@192.168.1.6:~/auto_encoder.ipynb ./
+scp dragonchen.tw:/etc/nginx/site-enabled/default /home/Documents/
+scp -r dragonchen.tw:~/test ./
+```
+
+### Compress
+
+```bash
+unzip NAME.zip          # extract content out from zip
+zip OUT.zip -r output/  # compress output/ folder into OUT.zip
+
+tar -xvf NAME.tar             # -x for extract, -v for verbose, -f for file name
+tar -cvf OUTPUT.tar FOLDER/   # -c for compress, -v for verbose, -f for file name
+# "append -z for gzip files *.tar.gz"
+```
 
 ### Resources (CPU, GPU, Network, etc.)
 ```bash
@@ -165,6 +210,8 @@ ping xxx.com        # try to reach the website
 
 # You can know the real ip address
 ```
+
+## Other commands
 
 ### Executeable
 ```bash
@@ -189,5 +236,72 @@ ln -s/FROM/a.run /TO/b.run  # make a soft link
 
 sh SOME_NAME.sh         # run a shell script, e.g. get docker
 
+man A_COMMAND           # view the document of this command
+
+less                    # view content in a vim-like viewer
+cat hello.py | less     # print the content of hello.py and use less to view it
+
 wget, curl              # networking
+```
+
+## Advanced topic
+
+### grep, sed
+
+grep is a linux for searching text with "regular expression"
+
+```bash
+
+```
+
+### Pipeline
+
+Linux commands could be connected with pipe character "|".
+
+```bash
+wc -l docs.md
+#       20 docs.md
+cat docs.md
+# - 2022/02/14 Slide: [Google Docs](https://docs.google.com/presentation/d/1qNBqi2S6GsL5vjUT6TGHAZ2q8MLZnD8EXB0k3uGowGw/edit)
+# - 2022/01/25 旅店腳本: [Google Docs](https://docs.google.com/presentation/d/1AzI7vDt31rh0kIlzkSsDm5nOjd018hcHaz39LYUDXzQ/edit)
+# - 2022/01/03 Slide: [Google Docs](https://docs.google.com/presentation/d/1PELnLoFmjHP4GjsoX0vJvaoRaeIrsXAwDty4H8Mgqvg/edit?us)
+# ...
+
+cat docs.md | wc -l
+#       20     109    2516
+```
+
+What is advantages? faster?easier?  
+It is easier for building a whole process of text manipulation.  
+Starting from data, applying pre-process, doing first task, save it to file  
+
+```bash
+cat cube.py | less
+cat cube.py | head -n 11 | less
+cat cube.py | head -n 11 | sed 's/blocks_of_cube/calc_cube_num/g' | less
+cat cube.py | head -n 11 | sed 's/blocks_of_cube/calc_cube_num/g' > new_cube.py # > is save the result into a text file
+
+ls *.py
+ls | grep -e 'py\|go'
+
+ls | grep 'f'
+ls | grep 'f.*\.go'       # .go file that its name contain f
+ls | grep '^f.*\.go'      # .go file that its name starting with f
+
+ls *.py | grep '.\{3,\}\.py'
+# alex.py
+# crypt.py
+# cube.py
+# lotty.py
+# st_btn.py
+# test_session.py
+# tttttype.py
+# unbound_2d.py
+# untitled.py
+ls *.py | grep '.\{6,\}\.py'
+# st_btn.py
+# test_session.py
+# tttttype.py
+# unbound_2d.py
+# untitled.py
 ```
