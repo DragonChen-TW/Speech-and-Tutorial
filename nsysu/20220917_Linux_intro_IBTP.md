@@ -251,7 +251,24 @@ wget, curl              # networking
 grep is a linux for searching text with "regular expression"
 
 ```bash
+grep PATTERN FILE_NAME1 FILE_NAME2
+grep def cube.py crypt.py
+grep def *.py                           # *.py mean all of the .py files
 
+grep -A 2 def cube.py                   # display 3 lines after any matches
+grep -B 2 def cube.py                   # display 3 lines before any matches
+
+grep -i xx xx                           # ignore the capitalization check
+
+grep -n def *.py                        # displaying line numbers
+grep --color def *.py                        # displaying line numbers
+```
+
+sed is way too hard. pass it.  
+Recommend "CS669 UNIX系統程式" by 希家史提夫  
+
+```bash
+cat cube.py | sed 's/\(def\) .*:/\1 lalala(blabla):/g'
 ```
 
 ### Pipeline
